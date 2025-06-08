@@ -1,0 +1,41 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}{{ category.name }} | Магазин{% endblock %}
+
+{% block content %}
+<section class="products">
+    <h2>Товары категории: {{ category.name }}</h2>
+
+    <!-- 🔍 Поисковик внутри категории -->
+    <form method="get" action="">
+        <div class="input-group mb-4">
+            <input type="text" name="search" class="form-control" placeholder="Поиск в категории..." value="{{ search_query|default_if_none:'' }}">
+            <button type="submit" class="btn btn-primary">Поиск</button>
+        </div>
+    </form>
+
+    <div class="product-list">
+        {% for product in products %}
+            <div class="product-card">
+                <div class="product-image">
+                    {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                    {% endif %}
+                </div>
+                <div class="product-info">
+                    <h3>{{ product.name }}</h3>
+                    <p class="product-price">{{ product.price|floatformat:2 }} ₽</p>
+                    <form method="post" action="{% url 'shop:cart_add' product.id %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit">Добавить в корзину</button>
+                    </form>
+                </div>
+            </div>
+        {% empty %}
+            <p>В этой категории пока нет товаров.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "shop/base.html" %}
+{% load static %}
+{% load form_extras %}
+
+{% block title %}Оформление заказа{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'shop/order.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="order-form card shadow p-4" style="width: 100%; max-width: 500px; background-color: white; border-radius: 20px;">
+    <h3 class="text-center mb-4">📝 Оформление заказа</h3>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="mb-3">
+        {{ form.full_name|add_placeholder:"ФИО" }}
+      </div>
+      <div class="mb-3">
+        {{ form.address|add_placeholder:"Адрес" }}
+      </div>
+      <div class="mb-3">
+        {{ form.postal_code|add_placeholder:"Почтовый индекс" }}
+      </div>
+      <div class="mb-3">
+        {{ form.city|add_placeholder:"Город" }}
+      </div>
+      <button type="submit" class="btn btn-success w-100">Подтвердить заказ</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

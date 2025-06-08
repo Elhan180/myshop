@@ -1,0 +1,6 @@
+{% extends "shop/base.html" %}
+{% block content %}
+<h2>Ошибка оплаты</h2>
+<p>{{ error }}</p>
+<a href="{% url 'shop:order_payment' order.id %}">Попробовать снова</a>
+{% endblock %}

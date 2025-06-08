@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.env
+*.venv
+env/
+venv/
+ENV/
+VENV/
+
+# Django
+*.sqlite3
+db.sqlite3
+*.log
+*.pot
+*.pyc
+*.mo
+*.swp
+*.swo
+*.~*
+
+# IDEs
+.vscode/
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Static/media
+/staticfiles/
+/media/
+
+# Migrations (опционально — если ты хочешь их генерировать только вручную)
+**/migrations/*.py
+!**/migrations/__init__.py
+
+# Pip environment
+pip-selfcheck.json

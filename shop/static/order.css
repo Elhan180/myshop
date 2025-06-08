@@ -1,0 +1,13 @@
+.rounded-input {
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ced4da;
+  background-color: #f8f9fa;
+}
+
+.rounded-input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.4);
+}

@@ -1,0 +1,66 @@
+{% extends "shop/base.html" %}
+{% load static %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+            <h4 class="mb-0">🛒 Ваша корзина</h4>
+        </div>
+        <div class="card-body">
+            {% if cart|length == 0 %}
+                <p class="text-center">Корзина пуста.</p>
+                <div class="text-center mt-3">
+                    <a href="{% url 'shop:product_list' %}" class="btn btn-outline-primary">Вернуться в каталог</a>
+                </div>
+            {% else %}
+                <div class="table-responsive">
+                    <table class="table table-bordered align-middle text-center">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Товар</th>
+                                <th>Цена</th>
+                                <th>Кол-во</th>
+                                <th>Сумма</th>
+                                <th>Удалить</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in cart %}
+                            <tr>
+                                <td>
+                                    {% if item.product.image %}
+                                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" width="50">
+                                    {% endif %}
+                                    <strong>{{ item.product.name }}</strong>
+                                </td>
+                                <td>{{ item.price }} ₽</td>
+                                <td>{{ item.quantity }}</td>
+                                <td><strong>{{ item.total_price }} ₽</strong></td>
+                                <td>
+                                    <form method="post" action="{% url 'shop:cart_remove' item.product.id %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-sm btn-danger">✖</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="text-end mt-4">
+                    <h5><strong>Общая сумма: {{ cart.get_total_price }} ₽</strong></h5>
+                    <a href="{% url 'shop:order_create' %}" class="btn btn-success mt-3">Оформить заказ</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% if search_query %}
+  <h3>По вашему запросу «{{ search_query }}» найдено {{ products|length }} товар(ов).</h3>
+{% endif %}
+
+</div>
+{% endblock %}
+

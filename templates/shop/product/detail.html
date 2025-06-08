@@ -1,0 +1,77 @@
+{% load static %}
+{% load cart_extras %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ product.name }}</title>
+  <link rel="stylesheet" href="{% static 'shop/styles.css' %}">
+</head>
+<body>
+
+<header class="main-header">
+  <!-- Вставь свою шапку -->
+</header>
+
+<main class="product-detail-container">
+  <div class="product-detail">
+    <!-- Левая колонка — изображения -->
+    <div class="product-detail-image">
+      <div class="image-slider">
+        {% for img in product.images.all %}
+          <img src="{{ img.image.url }}" alt="{{ product.name }}" class="slider-image {% if forloop.first %}active{% endif %}">
+        {% empty %}
+          {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="slider-image active">
+          {% endif %}
+        {% endfor %}
+        <button class="slider-prev">&#10094;</button>
+        <button class="slider-next">&#10095;</button>
+      </div>
+    </div>
+
+    <!-- Правая колонка — описание и форма -->
+    <div class="product-detail-info">
+      <h1>{{ product.name }}</h1>
+      <p class="product-price">{{ product.price|floatformat:2 }} ₽</p>
+      <p class="product-description">{{ product.description|safe }}</p>
+
+      <form method="post" action="{% url 'shop:cart_add' product.id %}">
+        {% csrf_token %}
+        <label for="quantity">Количество:</label>
+        <input type="number" name="quantity" id="quantity" value="1" min="1">
+        <button type="submit">Добавить в корзину</button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- JS-слайдер -->
+<script>
+  const images = document.querySelectorAll('.slider-image');
+  const prevBtn = document.querySelector('.slider-prev');
+  const nextBtn = document.querySelector('.slider-next');
+  let currentIndex = 0;
+
+  function showImage(index) {
+    images.forEach(img => img.classList.remove('active'));
+    images[index].classList.add('active');
+  }
+
+  prevBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showImage(currentIndex);
+  });
+
+  nextBtn.addEventListener('click', () => {
+    currentIndex = (currentIndex + 1) % images.length;
+    showImage(currentIndex);
+  });
+</script>
+
+</body>
+</html>
+
+
+

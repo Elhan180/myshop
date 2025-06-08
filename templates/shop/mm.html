@@ -1,0 +1,133 @@
+{% load static %}
+{% load cart_extras %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Магазин одежды</title>
+    <link rel="stylesheet" href="{% static 'shop/styles.css' %}" />
+</head>
+<body>
+
+<!-- Шапка -->
+<header class="main-header">
+  <div class="container header-flex">
+    <div class="header-actions">
+      <a href="{% url 'shop:product_list' %}" class="logo-text">GASTLY</a>
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="{% url 'shop:product_list' %}">Главная</a></li>
+        <li><a href="#categories">Категории</a></li>
+        <li><a href="{% url 'shop:about' %}">О нас</a></li>
+        <li><a href="{% url 'shop:contacts' %}">Контакты</a></li>
+      </ul>
+    </nav>
+
+    <form method="get" action="{{ form_action }}" class="search-form">
+      <input type="text" name="search" placeholder="Поиск..." value="{{ search_query|default_if_none:'' }}">
+      <button type="submit">🔍</button>
+    </form>
+
+    <a href="{% url 'shop:cart_detail' %}" class="cart-btn">🛒 Корзина</a>
+  </div>
+</header>
+
+<!-- Главный баннер (только на главной) -->
+{% if not selected_category %}
+<section class="hero">
+  <div class="hero-content">
+    <h1>Летняя коллекция</h1>
+    <p>Новые поступления! Тренды 2025 года.</p>
+    <a href="#categories" class="cta-btn">Смотреть новинки</a>
+  </div>
+</section>
+{% endif %}
+
+<!-- Популярные категории (только на главной) -->
+{% if not selected_category %}
+<section class="categories" id="categories">
+    <h2 class="section-title">Популярные категории</h2>
+    <div class="product-list">
+        <a href="{% url 'shop:category_products' 'muzhskaya-odezhda' %}" class="product-card category-card">
+            <div class="product-image">
+                <img src="{% static 'shop/muzhskaya.jpg' %}" alt="Мужская одежда">
+            </div>
+            <div class="product-info">
+                <h3>Мужская одежда</h3>
+            </div>
+        </a>
+
+        <a href="{% url 'shop:category_products' 'zhenskaya-odezhda' %}" class="product-card category-card">
+            <div class="product-image">
+                <img src="{% static 'shop/zhenskaya.jpg' %}" alt="Женская одежда">
+            </div>
+            <div class="product-info">
+                <h3>Женская одежда</h3>
+            </div>
+        </a>
+
+        <a href="{% url 'shop:category_products' 'aksessuary' %}" class="product-card category-card">
+            <div class="product-image">
+                <img src="{% static 'shop/aksessuary.jpg' %}" alt="Аксессуары">
+            </div>
+            <div class="product-info">
+                <h3>Аксессуары</h3>
+            </div>
+        </a>
+    </div>
+</section>
+{% endif %}
+
+<!-- Секция товаров -->
+<section class="products">
+    <h2 class="section-title">
+        {% if selected_category %}
+            {{ selected_category.name }}
+        {% else %}
+            Популярные товары
+        {% endif %}
+        {% if search_query %}
+            <p class="search-summary">По вашему запросу «{{ search_query }}» найдено {{ products|length }} товар{{ products|length|pluralize:"," }}.</p>
+        {% endif %}
+    </h2>
+
+    <div class="product-list">
+        {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'shop:product_detail' product.id product.slug %}">
+                    <div class="product-image">
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% endif %}
+                    </div>
+                    <div class="product-info">
+                        <h3>{{ product.name }}</h3>
+                    </div>
+                </a>
+                <p class="product-price">{{ product.price|floatformat:2 }} ₽</p>
+                <form method="post" action="{% url 'shop:cart_add' product.id %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit">Добавить в корзину</button>
+                </form>
+            </div>
+        {% empty %}
+            <p>Нет доступных товаров.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Подвал -->
+<footer>
+    <p>© 2025 Магазин одежды GASTLY. Все права защищены.</p>
+    <div class="social-links">
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Twitter</a>
+    </div>
+</footer>
+
+</body>
+</html>

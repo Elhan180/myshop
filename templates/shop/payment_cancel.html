@@ -1,0 +1,9 @@
+{% extends "shop/base.html" %}
+{% block title %}Оплата отменена{% endblock %}
+{% block content %}
+<div class="text-center mt-5">
+  <h2>❌ Оплата отменена</h2>
+  <p>Вы можете попробовать снова.</p>
+  <a href="{% url 'shop:cart_detail' %}" class="btn btn-warning mt-3">Вернуться в корзину</a>
+</div>
+{% endblock %}
